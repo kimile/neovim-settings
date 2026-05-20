@@ -1,9 +1,11 @@
 return {
     {
-        "folke/tokyonight.nvim",
+        "navarasu/onedark.nvim",
         config = function()
-            require("tokyonight").setup({})
-            vim.cmd.colorscheme "tokyonight"
+            require("onedark").setup({
+                style = "deep"
+            })
+            vim.cmd.colorscheme "onedark"
         end
     },
 }
