@@ -26,7 +26,7 @@ return {
                     return (icons[level] or "") .. count
                 end,
                 numbers = "none",
-                separator_style = "slant",
+                separator_style = "slope",
                 always_show_bufferline = true,
                 show_buffer_close_icons = true,
                 show_close_icon = false,

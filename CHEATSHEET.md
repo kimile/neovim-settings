@@ -14,6 +14,7 @@
 | `<leader>fh` | Search help tags (Telescope) |
 | `<leader>e` | Toggle file explorer sidebar (press again to close) |
 | `<leader>o` | Focus file explorer sidebar (press `<C-l>` to return to editor, press `a` to add file) |
+| `r` | Rename file in file tree (when cursor is on the file) |
 | `<leader>a` | Bookmark current file (Harpoon) |
 | `<C-e>` | Open bookmark list (Harpoon quick menu) — press `<C-e>` again or `<Esc>` to close |
 | `<M-1>` | Jump to bookmark 1 |
@@ -55,6 +56,7 @@
 
 | Key | Mode | Action |
 |-----|------|--------|
+| `ggVG` | normal | Select all text |
 | `<leader>vrn` | normal | Rename symbol |
 | `<leader>vca` | normal | Code actions |
 | `<C-Space>` | insert | Trigger completion |
@@ -121,6 +123,23 @@
 
 ---
 
+## Buffers / Tabs
+
+| Key | Action |
+|-----|--------|
+| `<S-h>` | Previous buffer |
+| `<S-l>` | Next buffer |
+| `<leader>bx` | Close current buffer |
+| `<leader>bo` | Close all other buffers |
+| `<leader>bp` | Pin / unpin buffer |
+| `<leader>bP` | Close all unpinned buffers |
+| `<leader>bl` | Close all buffers to the left |
+| `<leader>br` | Close all buffers to the right |
+
+> `<S-h>` / `<S-l>` override vim's built-in `H` / `L` (jump to top/bottom of visible screen).
+
+---
+
 ## Session
 
 Sessions are saved per working directory on exit. nvim-tree is excluded from saves so it doesn't break on restore.
@@ -140,6 +159,7 @@ Sessions are saved per working directory on exit. nvim-tree is excluded from sav
 | Key | Action |
 |-----|--------|
 | `<leader>dc` | Diff current buffer against clipboard (opens vertical split) |
+| `do` | Accept changes from clipboard into current file (while in diff mode) |
 | `<leader>do` | Exit diff mode |
 
 ---
@@ -157,6 +177,7 @@ Sessions are saved per working directory on exit. nvim-tree is excluded from sav
 | Location | Issue | Status |
 |----------|-------|--------|
 | `lua/config/keybinds.lua:2` | `<leader>cd` opens netrw, which is disabled | Remove or repurpose |
+| `lua/plugins/bufferline.lua` | `<S-h>` / `<S-l>` override vim's `H` / `L` screen-navigation keys | Intentional trade-off |
 
 ### Harpoon overrides these Vim built-ins
 
