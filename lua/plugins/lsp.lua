@@ -12,6 +12,7 @@ return {
                 "lua_ls",        -- Lua
                 "ts_ls",         -- TypeScript/JavaScript
                 "sqlls",         -- SQL
+                "prismals",      -- Prisma
             },
             automatic_installation = true,
         })
@@ -55,9 +56,14 @@ return {
             cmd = { "sql-language-server", "up", "--method", "stdio" },
         })
 
+        vim.lsp.config("prismals", {
+            cmd = { "prisma-language-server", "--stdio" },
+        })
+
         -- Enable servers
         vim.lsp.enable("lua_ls")
         vim.lsp.enable("ts_ls")
         vim.lsp.enable("sqlls")
+        vim.lsp.enable("prismals")
     end,
 }

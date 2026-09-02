@@ -66,7 +66,7 @@
 | `<S-Tab>` | insert/select | Previous completion item or jump snippet back |
 | `<C-b>` | insert | Scroll completion docs up |
 | `<C-f>` | insert | Scroll completion docs down |
-| `<leader>dc` | normal | compare with clipboard (`<leader>do` to leave) |
+| `<leader>dc` | normal | compare with clipboard (`<leader>dx` to leave) |
 
 
 ---
@@ -160,7 +160,7 @@ Sessions are saved per working directory on exit. nvim-tree is excluded from sav
 |-----|--------|
 | `<leader>dc` | Diff current buffer against clipboard (opens vertical split) |
 | `do` | Accept changes from clipboard into current file (while in diff mode) |
-| `<leader>do` | Exit diff mode |
+| `<leader>dx` | Exit diff mode & close clipboard split |
 
 ---
 
