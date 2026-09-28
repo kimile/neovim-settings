@@ -30,7 +30,7 @@
 
 | Key | Action |
 |-----|--------|
-| `grd` | Go to definition |
+| `gd` | Go to definition |
 | `<C-o>` | Jump back (after going to definition, etc.) |
 | `<C-i>` | Jump forward |
 | `<leader>grr` | Find references (Telescope picker — press `q` or `<Esc>` to close) |

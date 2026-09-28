@@ -23,7 +23,7 @@ return {
             callback = function(ev)
                 local opts = { buffer = ev.buf }
 
-                vim.keymap.set("n", "grd", vim.lsp.buf.definition, opts)
+                vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
                 vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
                 vim.keymap.set("n", "<leader>grs", function() require("telescope.builtin").lsp_workspace_symbols() end, opts)
                 vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, opts)
