@@ -18,6 +18,22 @@ return {
             green    = "#8bcd5b",
         }
 
+        local function close_buf(bufnr)
+            for _, win in ipairs(vim.fn.win_findbuf(bufnr)) do
+                local alt
+                for _, b in ipairs(vim.fn.getbufinfo({ buflisted = 1 })) do
+                    if b.bufnr ~= bufnr and vim.bo[b.bufnr].filetype ~= "NvimTree" then
+                        alt = b.bufnr
+                        break
+                    end
+                end
+                vim.api.nvim_win_call(win, function()
+                    if alt then vim.api.nvim_win_set_buf(win, alt) else vim.cmd("enew") end
+                end)
+            end
+            pcall(vim.cmd, "bdelete! " .. bufnr)
+        end
+
         require("bufferline").setup({
             options = {
                 diagnostics = "nvim_lsp",
@@ -42,7 +58,11 @@ return {
                     },
                 },
                 hover = { enabled = true, delay = 150, reveal = { "close" } },
-                middle_mouse_command = "bdelete! %d",
+                -- Plain `bdelete` can close the editor window, leaving NvimTree full-screen.
+                -- Swap windows to another buffer first so the layout (and offset) survives.
+                close_command = close_buf,
+                right_mouse_command = close_buf,
+                middle_mouse_command = close_buf,
             },
             highlights = {
                 fill                 = { bg = deep.bg_bar },
