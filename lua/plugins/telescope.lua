@@ -104,7 +104,16 @@ return {
 	          end
 	        end
 	        pcall(require("nvim-tree.api").tree.close)
-	        persistence.save()
+	        -- don't overwrite the old project's session with an empty one
+	        local has_file = false
+	        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+	          local name = vim.api.nvim_buf_get_name(buf)
+	          if vim.bo[buf].buflisted and vim.bo[buf].buftype == "" and name ~= "" and vim.fn.isdirectory(name) == 0 then
+	            has_file = true
+	            break
+	          end
+	        end
+	        if has_file then persistence.save() end
 	        vim.cmd("silent! %bdelete!")
 	        vim.cmd("cd " .. vim.fn.fnameescape(selection.value))
 	        persistence.load()

@@ -15,6 +15,18 @@ return {
             pcall(vim.api.nvim_buf_delete, b, { force = true })
           end
         end
+        -- nothing real open: skip the save so it can't overwrite a good session with an empty one
+        local has_file = false
+        for _, b in ipairs(vim.api.nvim_list_bufs()) do
+          local name = vim.api.nvim_buf_get_name(b)
+          if vim.bo[b].buflisted and vim.bo[b].buftype == "" and name ~= "" and vim.fn.isdirectory(name) == 0 then
+            has_file = true
+            break
+          end
+        end
+        if not has_file then
+          require("persistence.config").options.need = math.huge
+        end
       end,
     })
     -- older sessions saved an empty NvimTree_N buffer; drop it on restore
@@ -22,17 +34,20 @@ return {
       pattern = "PersistenceLoadPost",
       callback = function()
         for _, b in ipairs(vim.api.nvim_list_bufs()) do
-          if vim.api.nvim_buf_get_name(b):match("NvimTree_%d+$") then
+          local name = vim.api.nvim_buf_get_name(b)
+          -- also drop the leftover directory buffer from `nvim .` (shows as a folder tab)
+          if name:match("NvimTree_%d+$") or (name ~= "" and vim.fn.isdirectory(name) == 1) then
             pcall(vim.api.nvim_buf_delete, b, { force = true })
           end
         end
       end,
     })
+    -- evaluated now: nvim-tree hijacks the dir arg on startup and rewrites argv to NvimTree_N
+    local argc = vim.fn.argc()
+    local start_clean = argc == 0 or (argc == 1 and vim.fn.isdirectory(vim.fn.argv(0)) == 1)
     vim.api.nvim_create_autocmd("VimEnter", {
       callback = function()
-        local argc = vim.fn.argc()
-        local is_dir = argc == 1 and vim.fn.isdirectory(vim.fn.argv(0)) == 1
-        if argc == 0 or is_dir then
+        if start_clean then
           vim.schedule(function()
             pcall(require("nvim-tree.api").tree.close)
             persistence.load()
