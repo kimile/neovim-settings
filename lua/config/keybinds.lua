@@ -54,3 +54,10 @@ end, { desc = 'Exit diff mode & close split' })
 
 -- Close quickfix / location list
 vim.keymap.set('n', '<leader>q', ':cclose<CR>', { desc = 'Close quickfix' })
+
+-- Copy full path of current file to clipboard
+vim.keymap.set('n', '<leader>cp', function()
+    local path = vim.fn.expand('%:p')
+    vim.fn.setreg('+', path)
+    vim.notify('Copied: ' .. path)
+end, { desc = 'Copy full file path' })

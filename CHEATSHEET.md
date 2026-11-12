@@ -15,6 +15,7 @@
 | `<leader>e` | Toggle file explorer sidebar (press again to close) |
 | `<leader>o` | Focus file explorer sidebar (press `<C-l>` to return to editor, press `a` to add file) |
 | `r` | Rename file in file tree (when cursor is on the file) |
+| `<leader>cp` | Copy full path of current file to clipboard |
 | `<leader>a` | Bookmark current file (Harpoon) |
 | `<C-e>` | Open bookmark list (Harpoon quick menu) — press `<C-e>` again or `<Esc>` to close |
 | `<M-1>` | Jump to bookmark 1 |
