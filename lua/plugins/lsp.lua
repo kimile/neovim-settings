@@ -31,6 +31,16 @@ return {
                 vim.keymap.set("n", "<leader>dj", vim.diagnostic.goto_next, opts)
                 vim.keymap.set("n", "<leader>vca", vim.lsp.buf.code_action, opts)
                 vim.keymap.set("n", "<leader>grr", function() require("telescope.builtin").lsp_references() end, opts)
+                -- tRPC fallback: text search for client calls of the procedure under cursor
+                vim.keymap.set("n", "<leader>grt", function()
+                    local word = vim.fn.expand("<cword>")
+                    local root = vim.fn.systemlist("git rev-parse --show-toplevel")[1] or vim.fn.getcwd()
+                    require("telescope.builtin").grep_string({
+                        cwd = root,
+                        use_regex = true,
+                        search = "\\." .. word .. "\\.(query|mutate|useQuery|useMutation|useSuspenseQuery|useInfiniteQuery|useSuspenseInfiniteQuery|subscribe|useSubscription|queryOptions|mutationOptions)",
+                    })
+                end, opts)
                 vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
                 vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
             end,
@@ -50,6 +60,20 @@ return {
 
         vim.lsp.config("ts_ls", {
             cmd = { "typescript-language-server", "--stdio" },
+            -- One tsserver for the whole monorepo so references cross packages (tRPC client <-> router)
+            root_dir = function(bufnr, on_dir)
+                local root = vim.fs.root(bufnr, {
+                    "pnpm-workspace.yaml", "turbo.json", "lerna.json", "nx.json", ".git",
+                })
+                    or vim.fs.root(bufnr, { "tsconfig.json", "package.json" })
+                if root then on_dir(root) end
+            end,
+            init_options = {
+                preferences = {
+                    disableSourceOfProjectReferenceRedirect = true,
+                },
+                tsserver = { maxTsServerMemory = 8192 },
+            },
         })
 
         vim.lsp.config("sqlls", {
