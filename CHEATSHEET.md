@@ -32,6 +32,7 @@
 | Key | Action |
 |-----|--------|
 | `gd` | Go to definition |
+| `Ctrl`/`Option` + click | Go to definition (Option needs Ghostty `macos-option-as-alt = true`) |
 | `<C-o>` | Jump back (after going to definition, etc.) |
 | `<C-i>` | Jump forward |
 | `<leader>grr` | Find references (Telescope picker — press `q` or `<Esc>` to close) |

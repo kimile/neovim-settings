@@ -24,6 +24,10 @@ return {
                 local opts = { buffer = ev.buf }
 
                 vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+                -- modifier+click: move cursor to click, then go to definition
+                for _, key in ipairs({ "<C-LeftMouse>", "<M-LeftMouse>" }) do
+                    vim.keymap.set("n", key, "<LeftMouse><Cmd>lua vim.lsp.buf.definition()<CR>", opts)
+                end
                 vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
                 vim.keymap.set("n", "<leader>grs", function() require("telescope.builtin").lsp_workspace_symbols() end, opts)
                 vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, opts)
