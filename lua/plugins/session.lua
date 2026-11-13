@@ -8,6 +8,8 @@ return {
       pattern = "PersistenceSavePre",
       callback = function()
         pcall(require("nvim-tree.api").tree.close)
+        -- diffview panes restore as plain windows (no scrollbind/diff), so don't save them
+        pcall(vim.cmd, "DiffviewClose")
         -- directory buffers (from `nvim .`) count as files and would save an empty session
         for _, b in ipairs(vim.api.nvim_list_bufs()) do
           local name = vim.api.nvim_buf_get_name(b)
@@ -36,7 +38,7 @@ return {
         for _, b in ipairs(vim.api.nvim_list_bufs()) do
           local name = vim.api.nvim_buf_get_name(b)
           -- also drop the leftover directory buffer from `nvim .` (shows as a folder tab)
-          if name:match("NvimTree_%d+$") or (name ~= "" and vim.fn.isdirectory(name) == 1) then
+          if name:match("NvimTree_%d+$") or name:match("^diffview://") or (name ~= "" and vim.fn.isdirectory(name) == 1) then
             pcall(vim.api.nvim_buf_delete, b, { force = true })
           end
         end

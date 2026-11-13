@@ -105,6 +105,17 @@
 - `cc` — commit (opens editor)
 - `q` — close status window and return to editor
 
+### Side-by-side diff (diffview)
+
+| Key | Action |
+|-----|--------|
+| `<leader>gv` | All changes vs HEAD (file panel + old/new panes) |
+| `<leader>gf` | History of current file |
+| `<leader>gF` | Repo commit history |
+| `<leader>gq` | Close diffview |
+
+Inside: `<Tab>`/`<S-Tab>` next/prev file, `s` stage, `u` unstage, `X` revert file.
+
 ---
 
 ## Windows & Splits
