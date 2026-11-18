@@ -4,6 +4,8 @@ return {
   config = function(_, opts)
     local persistence = require("persistence")
     persistence.setup(opts)
+    -- don't restore cwd from session: a stale `cd apps/api` would re-root the tree
+    vim.opt.sessionoptions:remove("curdir")
     -- One session per git repo: key on the git root (not cwd) and ignore the branch.
     persistence.current = function()
       local cwd = vim.fn.getcwd()
