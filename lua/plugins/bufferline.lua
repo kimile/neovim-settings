@@ -19,14 +19,28 @@ return {
         }
 
         local function close_buf(bufnr)
-            for _, win in ipairs(vim.fn.win_findbuf(bufnr)) do
-                local alt
-                for _, b in ipairs(vim.fn.getbufinfo({ buflisted = 1 })) do
-                    if b.bufnr ~= bufnr and vim.bo[b.bufnr].filetype ~= "NvimTree" then
-                        alt = b.bufnr
-                        break
+            -- Prefer the tab to the left (visual order); fall back to the right one.
+            local alt
+            local elements = require("bufferline").get_elements().elements
+            local idx
+            for i, e in ipairs(elements) do
+                if e.id == bufnr then idx = i break end
+            end
+            local function usable(e)
+                return e and vim.api.nvim_buf_is_valid(e.id) and vim.bo[e.id].buflisted
+                    and vim.bo[e.id].filetype ~= "NvimTree"
+            end
+            if idx then
+                for i = idx - 1, 1, -1 do
+                    if usable(elements[i]) then alt = elements[i].id break end
+                end
+                if not alt then
+                    for i = idx + 1, #elements do
+                        if usable(elements[i]) then alt = elements[i].id break end
                     end
                 end
+            end
+            for _, win in ipairs(vim.fn.win_findbuf(bufnr)) do
                 vim.api.nvim_win_call(win, function()
                     if alt then vim.api.nvim_win_set_buf(win, alt) else vim.cmd("enew") end
                 end)
@@ -100,9 +114,19 @@ return {
         vim.keymap.set("n", "<S-l>", "<cmd>BufferLineCycleNext<CR>", { desc = "Buffer: next" })
 
         -- <leader>b namespace — completely free in this config
-        vim.keymap.set("n", "<leader>bx", "<cmd>bdelete<CR>",                       { desc = "Buffer: close" })
+        vim.keymap.set("n", "<leader>bx", function()
+            local buf = vim.api.nvim_get_current_buf()
+            -- Never close the tree itself (that's what collapsed it when focus was in the tree).
+            if vim.bo[buf].filetype == "NvimTree" then return end
+            close_buf(buf)
+        end, { desc = "Buffer: close" })
         vim.keymap.set("n", "<leader>bo", "<cmd>BufferLineCloseOthers<CR>",          { desc = "Buffer: close others" })
-        vim.keymap.set("n", "<leader>bp", "<cmd>BufferLineTogglePin<CR>",            { desc = "Buffer: pin/unpin" })
+        vim.keymap.set("n", "<leader>ba", function()
+            for _, e in ipairs(require("bufferline").get_elements().elements) do
+                close_buf(e.id)
+            end
+        end, { desc = "Buffer: close all" })
+        vim.keymap.set("n", "<leader>bp","<cmd>BufferLineTogglePin<CR>",            { desc = "Buffer: pin/unpin" })
         vim.keymap.set("n", "<leader>bP", "<cmd>BufferLineGroupClose ungrouped<CR>", { desc = "Buffer: close unpinned" })
         vim.keymap.set("n", "<leader>bl", "<cmd>BufferLineCloseLeft<CR>",            { desc = "Buffer: close all left" })
         vim.keymap.set("n", "<leader>br", "<cmd>BufferLineCloseRight<CR>",           { desc = "Buffer: close all right" })

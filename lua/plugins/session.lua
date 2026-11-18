@@ -4,6 +4,13 @@ return {
   config = function(_, opts)
     local persistence = require("persistence")
     persistence.setup(opts)
+    -- One session per git repo: key on the git root (not cwd) and ignore the branch.
+    persistence.current = function()
+      local cwd = vim.fn.getcwd()
+      local root = vim.fn.systemlist({ "git", "-C", cwd, "rev-parse", "--show-toplevel" })[1]
+      if vim.v.shell_error ~= 0 or not root or root == "" then root = cwd end
+      return require("persistence.config").options.dir .. root:gsub("[\\/:]+", "%%") .. ".vim"
+    end
     vim.api.nvim_create_autocmd("User", {
       pattern = "PersistenceSavePre",
       callback = function()
