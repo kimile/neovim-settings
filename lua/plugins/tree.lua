@@ -12,6 +12,9 @@ return {
             },
             renderer = {
                 group_empty = true,
+                root_folder_label = function(path)
+                    return vim.g.project_name or vim.fn.fnamemodify(path, ":t")
+                end,
             },
             filters = {
                 dotfiles = false,
